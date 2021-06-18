@@ -1,3 +1,4 @@
+const fs = require('fs');
 const dotenv = require('dotenv');
 const Discord = require('discord.js');
 
@@ -5,6 +6,16 @@ const PREFIX = '!';
 
 dotenv.config();
 const client = new Discord.Client();
+client.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	// set a new item in the Collection
+	// with the key as the command name and the value as the exported module
+	client.commands.set(command.name, command);
+}
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -14,23 +25,18 @@ client.on('message', message => {
 	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
 	const args = message.content.slice(PREFIX.length).trim().split(/ +/);
-	const command = args.shift().toLowerCase();
+	const commandName = args.shift().toLowerCase();
 
-	if (command === 'ping') {
-		message.channel.send('Pong.');
+	if (!client.commands.has(commandName)) return;
+
+	const command = client.commands.get(commandName);
+
+	try {
+		command.execute(message, args);
 	}
-	else if (command === 'avatar') {
-		if (!message.mentions.users.size) {
-			return message.channel.send(`Your avatar: <${message.author.displayAvatarURL({ format: 'png', dynamic: true })}>`);
-		}
-
-		const avatarList = message.mentions.users.map(user => {
-			return `${user.username}'s avatar: <${user.displayAvatarURL({ format: 'png', dynamic: true })}>`;
-		});
-
-		// Send the entire array of strings as a message
-		// By default, discord.js will `.join()` the array with `\n`
-		message.channel.send(avatarList);
+	catch (error) {
+		console.error(error);
+		message.reply('there was an error trying to execute that command!');
 	}
 });
 
