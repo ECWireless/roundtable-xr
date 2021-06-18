@@ -19,5 +19,8 @@
   "homepage": "https://github.com/ECWireless/roundtable-xr#readme",
   "dependencies": {
     "discord.js": "^12.5.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0"
   }
 }
