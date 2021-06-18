@@ -51,7 +51,7 @@ client.on('message', message => {
 });
 
 app.get('/', async (req, res) => {
-	res.send('GET request to the homepage');
+	res.send('Homepage');
 });
 
 app.use(cors());
