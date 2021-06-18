@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ECWireless/roundtable-xr/issues"
   },
-  "homepage": "https://github.com/ECWireless/roundtable-xr#readme"
+  "homepage": "https://github.com/ECWireless/roundtable-xr#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
 }
