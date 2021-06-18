@@ -1,8 +1,18 @@
 const fs = require('fs');
 const dotenv = require('dotenv');
 const Discord = require('discord.js');
+const express = require('express');
+const cors = require('cors');
 
 const PREFIX = '!';
+
+// Initialize Port and App
+let port = process.env.PORT;
+if (port == null || port == '') {
+	port = 8000;
+}
+
+const app = express();
 
 dotenv.config();
 const client = new Discord.Client();
@@ -39,5 +49,13 @@ client.on('message', message => {
 		message.reply('there was an error trying to execute that command!');
 	}
 });
+
+app.get('/', async (req, res) => {
+	res.send('GET request to the homepage');
+});
+
+app.use(cors());
+app.use(express.json());
+app.listen(port, () => console.log(`App listening on port ${port}`));
 
 client.login(process.env.TOKEN);
