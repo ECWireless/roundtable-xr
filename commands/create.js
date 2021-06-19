@@ -16,7 +16,7 @@ function useArweave() {
 }
 const arweave = useArweave();
 
-const getHtmlData = (channel) => {
+const getHtmlData = (guild, channel, memberCount) => {
 	const data = `
 	<!DOCTYPE html>
 	<html lang="en">
@@ -27,16 +27,19 @@ const getHtmlData = (channel) => {
 		<title>RoundTable XR</title>
 	</head>
 	<body>
-		<h1>Congrats! You have created an XR room of #${channel}</h1>
+		<h1>Congrats! You have created an XR room version of #${channel}</h1>
+		<p>Guild name: ${guild}</p>
+		<p>Number of members in this channel: ${memberCount}</p>
 	</body>
 	</html>
 	`;
 	return data;
 };
 
-const createRoom = async (channel) => {
+const createRoom = async (guild, channel, memberCount) => {
+	console.log(memberCount);
 	const htmlTransaction = await arweave.createTransaction({
-		data: getHtmlData(channel),
+		data: getHtmlData(guild, channel, memberCount),
 	}, JSON.parse(process.env.WALLET));
 	htmlTransaction.addTag('Content-Type', 'text/html');
 	await arweave.transactions.sign(htmlTransaction, JSON.parse(process.env.WALLET));
@@ -56,7 +59,7 @@ module.exports = {
 	description: 'Allows you to create a WebXR channel.',
 	execute(message, args) {
 		console.log(args);
-		createRoom(message.channel.name).then(url => {
+		createRoom(message.guild.name, message.channel.name, message.guild.memberCount).then(url => {
 			message.channel.send(`Room created at https://arweave.net/${url}`);
 			message.channel.send(`You created an XR version of the channel "#${message.channel.name}".`);
 		});
