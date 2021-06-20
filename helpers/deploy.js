@@ -10,7 +10,7 @@ const arweave = useArweave();
 const txs = [];
 let txId = '';
 
-const deploy = async (dir) => {
+const deploy = async (dir, guild, channel, memberCount) => {
 	const wallet = JSON.parse(process.env.WALLET);
 
 	if (!dirExists(dir)) {
@@ -26,7 +26,7 @@ const deploy = async (dir) => {
 	await PromisePool.withConcurrency(10)
 		.for(files)
 		.process(async (file) => {
-			await prepareFiles(file, wallet);
+			await prepareFiles(file, wallet, guild, channel, memberCount);
 			return true;
 		});
 
@@ -42,7 +42,7 @@ const deploy = async (dir) => {
 	return txId;
 };
 
-const prepareFiles = async (f, wallet) => {
+const prepareFiles = async (f, wallet, guild, channel, memberCount) => {
 	return new Promise((resolve) => {
 		fs.readFile(f, async (err, data) => {
 			if (err) {
@@ -53,10 +53,18 @@ const prepareFiles = async (f, wallet) => {
 			if (!data || !data.length) {
 				resolve(true);
 			}
+			let editedData = data;
+			if (f === './room/index.html') {
+				editedData = data.toString();
+				editedData = editedData.replace('${guild}', guild);
+				editedData = editedData.replace('${channel}', channel);
+				editedData = editedData.replace('${memberCount}', memberCount);
+				editedData = Buffer.from(editedData, 'utf-8');
+			}
 
-			const hash = await toHash(data);
+			const hash = await toHash(editedData);
 			const type = mime.getType(f);
-			const tx = await buildTransaction(wallet, hash, data, type);
+			const tx = await buildTransaction(wallet, hash, editedData, type);
 			txs.push({ path: f, hash, tx, type });
 			resolve(true);
 		});

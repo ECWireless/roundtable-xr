@@ -3,22 +3,7 @@ const { deploy } = require('../helpers/deploy');
 dotenv.config();
 
 const createRoom = async (guild, channel, memberCount) => {
-	// console.log(memberCount);
-	// const htmlTransaction = await arweave.createTransaction({
-	// 	data: getHtmlData(guild, channel, memberCount),
-	// }, JSON.parse(process.env.WALLET));
-	// htmlTransaction.addTag('Content-Type', 'text/html');
-	// await arweave.transactions.sign(htmlTransaction, JSON.parse(process.env.WALLET));
-
-	// const uploader = await arweave.transactions.getUploader(htmlTransaction);
-
-	// while (!uploader.isComplete) {
-	// 	await uploader.uploadChunk();
-	// 	console.log(`${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`);
-	// 	console.log(htmlTransaction.id);
-	// 	return htmlTransaction.id;
-	// }
-	const txId = await deploy('./room');
+	const txId = await deploy('./room', guild, channel, memberCount);
 	return txId;
 };
 
