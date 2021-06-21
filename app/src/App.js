@@ -9,6 +9,8 @@ function App() {
         <p>
           Congrats! You have created an XR room version of #$channel
         </p>
+        <p>Guild name: $guild</p>
+        <p>Number of members in this channel: $memberCount</p>
       </header>
     </div>
   );

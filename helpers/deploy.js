@@ -53,14 +53,12 @@ const prepareFiles = async (f, wallet, guild, channel, memberCount) => {
 			if (!data || !data.length) {
 				resolve(true);
 			}
-			let editedData = data;
-			if (f === './room/index.html') {
-				editedData = data.toString();
-				editedData = editedData.replace('${guild}', guild);
-				editedData = editedData.replace('${channel}', channel);
-				editedData = editedData.replace('${memberCount}', memberCount);
-				editedData = Buffer.from(editedData, 'utf-8');
-			}
+
+			let editedData = data.toString();
+			editedData = editedData.replace('$guild', guild);
+			editedData = editedData.replace('$channel', channel);
+			editedData = editedData.replace('$memberCount', memberCount);
+			editedData = Buffer.from(editedData, 'utf-8');
 
 			const hash = await toHash(editedData);
 			const type = mime.getType(f);

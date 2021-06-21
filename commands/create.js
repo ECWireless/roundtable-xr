@@ -3,7 +3,7 @@ const { deploy } = require('../helpers/deploy');
 dotenv.config();
 
 const createRoom = async (guild, channel, memberCount) => {
-	const txId = await deploy('./room', guild, channel, memberCount);
+	const txId = await deploy('./app/build', guild, channel, memberCount);
 	return txId;
 };
 
