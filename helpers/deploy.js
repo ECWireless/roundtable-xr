@@ -38,7 +38,6 @@ const deploy = async (dir, guild, channel, memberCount) => {
 			await upload(txData);
 			return true;
 		});
-
 	return txId;
 };
 

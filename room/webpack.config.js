@@ -7,7 +7,7 @@ const appDirectory = fs.realpathSync(process.cwd());
 module.exports = {
 	entry: path.resolve(appDirectory, 'src/app.ts'),
 	output: {
-		filename: 'js/bundleName.js',
+		filename: 'js/bundledRoom.js',
 	},
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
