@@ -27,7 +27,6 @@ module.exports = {
 			break;
 
 		default:
-			console.log('create room');
 			createRoom(message.guild.name, message.channel.name, message.guild.memberCount).then(url => {
 				message.channel.send(`Room created at https://arweave.net/${url}`);
 				message.channel.send(`You created an XR version of the channel "#${message.channel.name}".`);
