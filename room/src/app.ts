@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, Color3, HemisphericLight, Mesh, StandardMaterial } from "@babylonjs/core";
+import { Engine, Scene, ArcRotateCamera, Vector3, Color3, HemisphericLight, MeshBuilder, StandardMaterial } from "@babylonjs/core";
 
 class App {
   private _canvas: HTMLCanvasElement;
@@ -17,11 +17,26 @@ class App {
       var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 2, new Vector3(0,1,3), scene);
       camera.attachControl(this._canvas, true);
       var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-      var ground = Mesh.CreateGround("ground1", 10, 10, 10, scene);
+      var ground = MeshBuilder.CreateGround("ground1", {width: 10, height: 10}, scene);
       var groundMtr = new StandardMaterial("myMaterial", scene);
       groundMtr.diffuseColor = new Color3(.25, .2, .2);
-
       ground.material = groundMtr;
+
+      // Walls
+      const plane1 = MeshBuilder.CreatePlane("plane1", {height: 4, width: 10, sideOrientation: 1});
+      plane1.position.z = -5;
+      plane1.position.y = 2;
+      const plane2 = MeshBuilder.CreatePlane("plane2", {height: 4, width: 10, sideOrientation: 1});
+      plane2.position.x = -5;
+      plane2.position.y = 2;
+      plane2.rotation.y = Math.PI / 2;
+      const plane3 = MeshBuilder.CreatePlane("plane3", {height: 4, width: 10, sideOrientation: 1});
+      plane3.position.x = 5;
+      plane3.position.y = 2;
+      plane3.rotation.y = Math.PI / -2;
+      const plane4 = MeshBuilder.CreatePlane("plane4", {height: 4, width: 10});
+      plane4.position.z = 5;
+      plane4.position.y = 2;
 
       // hide/show the Inspector
       window.addEventListener("keydown", (ev) => {
