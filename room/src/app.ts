@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, Color3, HemisphericLight, MeshBuilder, StandardMaterial } from "@babylonjs/core";
+import { CubeTexture, Engine, Scene, ArcRotateCamera, Vector3, Color3, HemisphericLight, MeshBuilder, StandardMaterial, Texture } from "@babylonjs/core";
 
 class App {
   private _canvas: HTMLCanvasElement;
@@ -14,9 +14,21 @@ class App {
       var engine = new Engine(this._canvas, true);
       var scene = new Scene(engine);
 
-      var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 2, new Vector3(0,1,3), scene);
+      var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new Vector3(0,1,3), scene);
       camera.attachControl(this._canvas, true);
       var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
+
+      //Skybox
+      const skybox = MeshBuilder.CreateBox("skyBox", {size:150}, scene);
+      const skyboxMaterial = new StandardMaterial("skyBox", scene);
+      skyboxMaterial.backFaceCulling = false;
+      skyboxMaterial.reflectionTexture = new CubeTexture("https://arweave.net/f7lPpg9mJVadPlJ8u6Hohj_2iAuxeol8lkTecLtNcXo/skybox", scene);
+      skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
+      skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
+      skyboxMaterial.specularColor = new Color3(0, 0, 0);
+      skybox.material = skyboxMaterial;
+
+      // Ground
       var ground = MeshBuilder.CreateGround("ground1", {width: 10, height: 10}, scene);
       var groundMtr = new StandardMaterial("myMaterial", scene);
       groundMtr.diffuseColor = new Color3(.25, .2, .2);
