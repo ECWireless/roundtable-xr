@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder } from "@babylonjs/core";
+import { Engine, Scene, ArcRotateCamera, Vector3, Color3, HemisphericLight, Mesh, StandardMaterial } from "@babylonjs/core";
 
 class App {
   private _canvas: HTMLCanvasElement;
@@ -14,11 +14,14 @@ class App {
       var engine = new Engine(this._canvas, true);
       var scene = new Scene(engine);
 
-      var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 4, 2, new Vector3(0,3,3), scene);
+      var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 2, new Vector3(0,1,3), scene);
       camera.attachControl(this._canvas, true);
       var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-      var sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
       var ground = Mesh.CreateGround("ground1", 10, 10, 10, scene);
+      var groundMtr = new StandardMaterial("myMaterial", scene);
+      groundMtr.diffuseColor = new Color3(.25, .2, .2);
+
+      ground.material = groundMtr;
 
       // hide/show the Inspector
       window.addEventListener("keydown", (ev) => {
