@@ -29,64 +29,39 @@ class App {
 
       // Camera
       var camera: UniversalCamera = new UniversalCamera("Camera", new Vector3(0,1,-3.5), scene);
-      camera.setTarget(Vector3.Zero());
+      camera.setTarget(new Vector3(0,1,0));
       camera.attachControl(this._canvas, true);
       camera.applyGravity = true;
       camera.checkCollisions = true;
       camera.ellipsoid = new Vector3(1.5, 1, 1.5);
       camera.ellipsoidOffset = new Vector3(0, 1, 0);
+      camera.inertia = 0;
+      camera.speed = 2.5;
 
-      var moveForward = false;
-      var moveBackward = false;
-      var moveRight = false;
-      var moveLeft = false;
+      if(!camera) {
+        console.error('You need to add a camera to the level to enable pointer lock');
+      }
+      let canvas = this._canvas;
+      // On click event, request pointer lock
+      canvas.addEventListener("click", function(evt) {
+          canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+          if (canvas.requestPointerLock) {
+              canvas.requestPointerLock();
+          }
+      }, false);
       
       var onKeyDown = function (event) {
         switch (event.keyCode) {
-          case 38: // up
-          case 87: // w
-              moveForward = true;
-              break;
-
-          case 37: // left
-          case 65: // a
-              moveLeft = true; break;
-
-          case 40: // down
-          case 83: // s
-              moveBackward = true;
-              break;
-
-          case 39: // right
-          case 68: // d
-              moveRight = true;
-              break;
-
-          case 32: // space
+          case 16: // shift
+            camera.speed = 7;
               break;
         }
       };
 
       var onKeyUp = function (event) {
         switch (event.keyCode) {
-          case 38: // up
-          case 87: // w
-              moveForward = false;
-              break;
-
-          case 37: // left
-          case 65: // a
-              moveLeft = false;
-              break;
-
-          case 40: // down
-          case 83: // a
-              moveBackward = false;
-              break;
-
-          case 39: // right
-          case 68: // d
-              moveRight = false;
+          case 16: // shift
+            camera.speed = 2.5;
               break;
         }
       };
@@ -112,7 +87,7 @@ class App {
       skybox.material = skyboxMaterial;
 
       // Ground
-      var ground = MeshBuilder.CreateGround("ground1", {width: 10, height: 10}, scene);
+      var ground = MeshBuilder.CreateGround("ground1", {width: 20, height: 20}, scene);
       var groundMtr = new StandardMaterial("myMaterial", scene);
       groundMtr.diffuseColor = new Color3(.25, .2, .2);
       ground.material = groundMtr;
@@ -120,22 +95,22 @@ class App {
       ground.material.backFaceCulling = false;
 
       // Walls
-      const plane1 = MeshBuilder.CreatePlane("plane1", {height: 4, width: 10, sideOrientation: 1});
-      plane1.position.z = -5;
+      const plane1 = MeshBuilder.CreatePlane("plane1", {height: 4, width: 20, sideOrientation: 1});
+      plane1.position.z = -10;
       plane1.position.y = 2;
       plane1.checkCollisions = true;
-      const plane2 = MeshBuilder.CreatePlane("plane2", {height: 4, width: 10, sideOrientation: 1});
-      plane2.position.x = -5;
+      const plane2 = MeshBuilder.CreatePlane("plane2", {height: 4, width: 20, sideOrientation: 1});
+      plane2.position.x = -10;
       plane2.position.y = 2;
       plane2.rotation.y = Math.PI / 2;
       plane2.checkCollisions = true;
-      const plane3 = MeshBuilder.CreatePlane("plane3", {height: 4, width: 10, sideOrientation: 1});
-      plane3.position.x = 5;
+      const plane3 = MeshBuilder.CreatePlane("plane3", {height: 4, width: 20, sideOrientation: 1});
+      plane3.position.x = 10;
       plane3.position.y = 2;
       plane3.rotation.y = Math.PI / -2;
       plane3.checkCollisions = true;
-      const plane4 = MeshBuilder.CreatePlane("plane4", {height: 4, width: 10});
-      plane4.position.z = 5;
+      const plane4 = MeshBuilder.CreatePlane("plane4", {height: 4, width: 20});
+      plane4.position.z = 10;
       plane4.position.y = 2;
       plane4.checkCollisions = true;
 
